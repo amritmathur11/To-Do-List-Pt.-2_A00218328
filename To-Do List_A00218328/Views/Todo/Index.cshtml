@@ -1,0 +1,102 @@
+﻿@model IEnumerable<To_Do_List_A00218328.Models.TodoItem>
+@{
+
+}
+
+<p>
+    <a class="btn btn-primary remove-at-offline" asp-action="Create">Create Task</a>
+</p>
+
+<div class="row">
+    <div class="col-lg-6">
+        <h2>Todo Completed</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered  table-striped">
+                <thead class="table-primary">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Title)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DoneDate)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Where(a => a.Done == true))
+                    {
+                        <tr>
+                            <td>
+                                <a class="btn btn-info" onclick="CopyTextToClipBoard('@item.Title')">@Html.DisplayFor(model => item.Title)</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+
+                            <td>
+                                <span> @(item.DoneDate.HasValue? item.DoneDate.Value.ToShortDateString():"")</span>
+                            </td>
+                            <td class="remove-at-offline">
+                                <a class="btn btn-sm btn-info" asp-action="Edit" asp-route-id="@item.TodoItemId">Edit</a>
+                                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.TodoItemId">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <h2>Todo Due</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered  table-striped">
+                <thead class="table-danger">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Title)
+
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Where(a => a.Done != true))
+                    {
+                        <tr>
+                            <td>
+                                <a class="btn btn-info" onclick="CopyTextToClipBoard('@item.Title')">@Html.DisplayFor(model => item.Title)</a>
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td class="remove-at-offline">
+                                <a class="btn btn-sm btn-info" asp-action="Edit" asp-route-id="@item.TodoItemId">Edit</a>
+                                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.TodoItemId">Delete</a>
+                                <a class="btn btn-success" href="/Todo/DoneTodo?TodoId=@item.TodoItemId">Done</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    if (!navigator.onLine) {
+        $('.remove-at-offline').addClass('hidden')
+    }
+    else {
+        $('.remove-at-offline').removeClass('hidden')
+    }
+</script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(User.Identity.Name))
+{ }
